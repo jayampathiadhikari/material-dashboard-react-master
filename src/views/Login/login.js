@@ -16,7 +16,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router-dom";
 
 class Login extends React.Component {
   constructor(props) {

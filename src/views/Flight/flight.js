@@ -223,15 +223,15 @@ class flight extends React.Component {
           <Grid item xs={9} sm={6}></Grid>
         </Grid>
 
-        <RadioGroup
+        {/* <RadioGroup
           aria-label="gender"
           name="gender1"
           onChange={this.handleChange}
-        >
+        > */}
           <Grid container spacing={3} style={{ alignItems: "center" }}>
             <Grid item xs={9} sm={1}></Grid>
             <Grid item xs={9} sm={6} style={{ alignItems: "center" }}>
-              <FormControlLabel
+              {/* <FormControlLabel
                 value="economy"
                 control={<Radio color="default" />}
               />{" "}
@@ -239,12 +239,12 @@ class flight extends React.Component {
               <FormControlLabel value="business" control={<Radio />} />
               <Label size="big">Business</Label>{" "}
               <FormControlLabel value="standard" control={<Radio />} />
-              <Label size="big">Standard</Label>
+              <Label size="big">Standard</Label> */}
             </Grid>
 
             <Grid item xs={9} sm={3}></Grid>
           </Grid>
-        </RadioGroup>
+        {/* </RadioGroup> */}
         <Grid container spacing={3} style={{ alignItems: "center" }}>
           <Grid item xs={9} sm={2}></Grid>
           <Grid item xs={9} sm={6}></Grid>
