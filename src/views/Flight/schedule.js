@@ -48,6 +48,7 @@ export class Schedule extends React.Component {
                         <Table.HeaderCell>Arrival Time</Table.HeaderCell>
                         <Table.HeaderCell>Airplane Model</Table.HeaderCell>
                         <Table.HeaderCell>Gate Name</Table.HeaderCell>
+                        <Table.HeaderCell>Delayed</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -58,13 +59,14 @@ export class Schedule extends React.Component {
                         <Table.Cell>{this.props.arrival_time}</Table.Cell>
                         <Table.Cell>{this.props.airplane_model}</Table.Cell>
                         <Table.Cell>{this.props.gate_name}</Table.Cell>
+                        <Table.Cell>{this.props.delayed}</Table.Cell>
                     </Table.Row>
                 </Table.Body>
 
                 <Table.Footer fullWidth>
                     <Table.Row>
-                        <Table.HeaderCell />
-                        <Table.HeaderCell colSpan='4'>
+                        <Table.HeaderCell colSpan='5'/>
+                        <Table.HeaderCell >
                             <Button
                                 floated='right'
                                 // icon
@@ -73,7 +75,7 @@ export class Schedule extends React.Component {
                                 size='small'
                                 value={this.props.value}
                             >
-                                 Add User
+                                 Reserve
                             </Button>
                             
                         </Table.HeaderCell>
