@@ -35,6 +35,7 @@ import Typography from "views/Typography/Typography.js";
 import Flight from "views/Flight/flight.js";
 // core components/views for RTL layout
 import Login from "./views/Login/login.js";
+import SignUp from "./views/SignUp/SignUp";
 import Bookings from "./views/Bookings/Bookings";
 const dashboardRoutes = [
   {
@@ -97,6 +98,13 @@ const access_routes = [
     name: "Login",
     icon: Notifications,
     component: Login,
+    layout: "/access"
+  },
+  {
+    path: "/signUp",
+    name: "SignUp",
+    icon: Notifications,
+    component: SignUp,
     layout: "/access"
   }
 ];

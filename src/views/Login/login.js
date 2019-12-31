@@ -2,20 +2,16 @@
 /* eslint-disable indent */
 
 import React from "react";
-// import { makeStyles } from '@material-ui/core/styles';
 import TextField from "@material-ui/core/TextField";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
-// import FormControlLabel from '@material-ui/core/FormControlLabel';
-// import Checkbox from '@material-ui/core/Checkbox';
-// import Link from '@material-ui/core/Link';
-// import Grid from '@material-ui/core/Grid';
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Link from "@material-ui/core/Link";
 
 class Login extends React.Component {
   constructor(props) {
@@ -35,6 +31,14 @@ class Login extends React.Component {
     });
   };
 
+  signUp = () => {
+    this.props.history.push({
+      pathname: "/access/signUp",
+      state: {
+        name: "sample name"
+      }
+    });
+  };
   //how to get those parameters
   //this.props.location.state.name
   render() {
@@ -47,7 +51,12 @@ class Login extends React.Component {
           <Typography component="h1" variant="h5" color="primary">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate onSubmit={this.redirect}>
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={this.redirect}
+            style={{ marginBottom: "50px" }}
+          >
             <TextField
               variant="outlined"
               margin="normal"
@@ -64,6 +73,22 @@ class Login extends React.Component {
                 });
               }}
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={text => {
+                this.setState({
+                  email: text.target.value
+                });
+              }}
+            />
             <Button
               onClick={this.handleSubmit}
               fullWidth
@@ -73,6 +98,15 @@ class Login extends React.Component {
             >
               Sign In
             </Button>
+            <Grid container>
+              <Grid item xs>
+              </Grid>
+              <Grid item>
+                <Link href="http://localhost:3000/access/signUp" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
           </form>
         </div>
         <Box mt={8}></Box>

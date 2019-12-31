@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-const ip = "http://a0ca3528.ngrok.io";
+const ip = "http://617c03e2.ngrok.io";
 export const FLIGHT_COMP_ON_UPDATE = ip + "/airport";
 export const FLIGHT_FETCH_SCHEDULE = ip + "/schedule";
 export const BOOKING_BOOKED_SEAT = ip + "/booking"; //shedule_id
