@@ -33,15 +33,15 @@ import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
-import Flight from "views/Flight/flight.js"
+import Flight from "views/Flight/flight.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
+import Login from "./views/Login/login.js";
 
 const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
-    rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
     layout: "/admin"
@@ -49,7 +49,6 @@ const dashboardRoutes = [
   {
     path: "/user",
     name: "User Profile",
-    rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
     component: UserProfile,
     layout: "/admin"
@@ -57,7 +56,6 @@ const dashboardRoutes = [
   {
     path: "/table",
     name: "Table List",
-    rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: TableList,
     layout: "/admin"
@@ -65,7 +63,6 @@ const dashboardRoutes = [
   {
     path: "/typography",
     name: "Typography",
-    rtlName: "طباعة",
     icon: LibraryBooks,
     component: Typography,
     layout: "/admin"
@@ -73,23 +70,20 @@ const dashboardRoutes = [
   {
     path: "/icons",
     name: "Icons",
-    rtlName: "الرموز",
     icon: BubbleChart,
     component: Icons,
     layout: "/admin"
   },
   {
-    path: "/maps",
-    name: "Maps",
-    rtlName: "خرائط",
+    path: "/login",
+    name: "Login",
     icon: LocationOn,
-    component: Maps,
+    component: Login,
     layout: "/admin"
   },
   {
     path: "/notifications",
     name: "Notifications",
-    rtlName: "إخطارات",
     icon: Notifications,
     component: NotificationsPage,
     layout: "/admin"
@@ -97,13 +91,31 @@ const dashboardRoutes = [
   {
     path: "/flight",
     name: "Notifications",
-    rtlName: "إخطارات",
     icon: Notifications,
     component: Flight,
     layout: "/admin"
-  },
-  
+  }
+];
 
+const user_routes = [
+  {
+    path: "/flight",
+    name: "Notifications",
+    icon: Notifications,
+    component: Flight,
+    layout: "/user"
+  }
+];
+
+const access_routes = [
+  {
+    path: "/login",
+    name: "Login",
+    icon: Notifications,
+    component: Login,
+    layout: "/access"
+  }
 ];
 
 export default dashboardRoutes;
+export { user_routes, access_routes };
