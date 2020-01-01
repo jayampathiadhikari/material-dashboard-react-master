@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable indent */
-
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -12,23 +9,42 @@ import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
-
+import axios from "axios";
+import * as constants from "../Flight/constants.js";
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loggedIn: false,
+      email: "",
+      password: "",
       username: "",
       userRef: null
     };
   }
   handleSubmit = event => {
-    this.props.history.push({
-      pathname: "/user",
-      state: {
-        name: "sample name"
-      }
-    });
+    console.log(this.state.email, this.state.password);
+    var postData = {
+      email: this.state.email,
+      password: this.state.password
+    };
+    axios
+      .post(constants.LOGIN_USER, postData)
+      .then(res => {
+        console.log(res.data.data);
+        sessionStorage.setItem("userID", res.data.data[0].user_id);
+        sessionStorage.setItem("userToken", res.headers["x-access-token"]);
+        this.props.history.push({
+          pathname: "/user",
+          state: {
+            userToken: res.headers["x-access-token"]
+          }
+        });
+        console.log(res.headers["x-access-token"]);
+      })
+      .catch(err => {
+        console.log("AXIOS ERROR: ", err);
+      });
   };
 
   signUp = () => {
@@ -39,6 +55,7 @@ class Login extends React.Component {
       }
     });
   };
+
   //how to get those parameters
   //this.props.location.state.name
   render() {
@@ -62,14 +79,15 @@ class Login extends React.Component {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
+              id="email"
+              label="Email"
+              name="email"
+              type="email"
               autoComplete="email"
               autoFocus
               onChange={text => {
                 this.setState({
-                  username: text.target.value
+                  email: text.target.value
                 });
               }}
             />
@@ -78,14 +96,15 @@ class Login extends React.Component {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
+              id="password"
+              label="Password"
+              name="password"
+              type="password"
+              autoComplete="password"
               autoFocus
               onChange={text => {
                 this.setState({
-                  email: text.target.value
+                  password: text.target.value
                 });
               }}
             />
@@ -99,10 +118,12 @@ class Login extends React.Component {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-              </Grid>
+              <Grid item xs></Grid>
               <Grid item>
-                <Link href="http://localhost:3000/access/signUp" variant="body2">
+                <Link
+                  href="http://localhost:3000/access/signUp"
+                  variant="body2"
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

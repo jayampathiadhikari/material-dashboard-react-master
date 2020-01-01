@@ -16,9 +16,9 @@ import { Schedule } from './schedule';
 import * as constants from './constants';
 
 const seat_classes = [
-  {key:1,value:"E",text:"Economy"},
-  {key:2,value:"S",text:"Standard"},
-  {key:3,value:"B",text:"Business"},
+  { key: 1, value: "E", text: "Economy" },
+  { key: 2, value: "S", text: "Standard" },
+  { key: 3, value: "B", text: "Business" },
 ]
 
 
@@ -38,8 +38,12 @@ class flight extends React.Component {
     fetchSchedule: false,
     visible: false,
     freeSeats: { classE: [], classB: [], classS: [] },
-    selectedArray:[],
-    selectedSeatIds:[]
+    selectedArray: [],
+    selectedSeatIds: [],
+    seatCost: 0,
+    discountPercentage: 0,
+    discountType : '',
+    total : 0,
   };
 
   handleChange = (event) => {
@@ -55,7 +59,7 @@ class flight extends React.Component {
       params: {
         schedule_id: schedule_id
       }
-    }).then(
+    }, constants.HEADER).then(
       res => {
 
         const classE = []; //economy
@@ -106,22 +110,22 @@ class flight extends React.Component {
       visible: false
     })
   }
-  setClass = (event,data) =>{
+  setClass = (event, data) => {
     this.setState({
-      class:data.value
+      class: data.value
     })
   }
-  selectClassArray = (event,data) =>{
-    if(data.value == "E"){
-      this.setState({selectedArray:this.state.freeSeats.classE})
-    }else if (data.value == "B"){
-      this.setState({selectedArray:this.state.freeSeats.classB})
-    }else{
-      this.setState({selectedArray:this.state.freeSeats.classS})
+  selectClassArray = (event, data) => {
+    if (data.value == "E") {
+      this.setState({ selectedArray: this.state.freeSeats.classE })
+    } else if (data.value == "B") {
+      this.setState({ selectedArray: this.state.freeSeats.classB })
+    } else {
+      this.setState({ selectedArray: this.state.freeSeats.classS })
     }
   }
   componentDidMount() {
-    axios.get(constants.FLIGHT_COMP_ON_UPDATE).then(
+    axios.get(constants.FLIGHT_COMP_ON_UPDATE, constants.HEADER).then(
       res => {
         console.log(res.data.data);
         const options = [];
@@ -140,6 +144,16 @@ class flight extends React.Component {
         })
       }
     );
+
+    axios.get(constants.USER_DISCOUNT ,constants.HEADER).then(res => {
+      console.log("user discount", res.data.data[0].percentage)
+      this.setState({discountPercentage:res.data.data[0].percentage,
+        discountType:res.data.data[0].type
+      })
+    }).catch(err=>{
+      console.log(err)
+    })
+
   };
   formatDate(date) {
     var d = new Date(date),
@@ -162,7 +176,7 @@ class flight extends React.Component {
         from_date: from_date,
         to_date: to_date
       }
-    }).then(res => {
+    }, constants.HEADER).then(res => {
       const schedules = [];
       res.data.data.map(
         item => {
@@ -185,11 +199,40 @@ class flight extends React.Component {
     });
 
   };
-  selectSeats= (event,data)=>{
+  selectSeats = (event, data) => {
     this.setState({
-      selectedSeatIds:data.value
-    })
+      selectedSeatIds: data.value
+    });
+    // this.calculate();
+    this.calculateCost();
   };
+
+  calculateCost = () => {
+    var cost =0 ;
+    this.state.selectedSeatIds.forEach(
+      id=>{
+        this.state.selectedArray.forEach(
+          item=>{
+            if(item.key == id){
+              item.seat_price = item.seat_price || 0 ;
+              cost+= item.seat_price
+            }
+          }
+        )
+      }
+    );
+    console.log("seatcost" , cost)
+  }
+  calculateTotal = () =>{
+      var total = this.state.seatCost * (100-this.state.discountPercentage);
+      this.setState({
+        total:total
+      })
+  }
+  calculate = () =>{
+    this.calculateCost();
+    this.calculateTotal();
+  }
   render() {
     const { classes } = this.props;
     return (
@@ -332,15 +375,17 @@ class flight extends React.Component {
               <p></p>
               <p></p>
               <p></p>
-              <Label size="big" basic color='orange' >Cost</Label><Label size="big" basic color='orange'>$1234</Label>
               <p></p>
               <p></p>
-              <Label size="big" basic color='blue'>Discount</Label><Label size="big" basic color='blue'>$1234</Label>
+              <Label size="big" basic color='orange' >Cost</Label><Label size="big" basic color='orange'>{this.state.seatCost}</Label>
               <p></p>
               <p></p>
-              <Label size="big" basic color='red'>Total</Label><Label size="big" basic color='red'>$1234</Label>
+              <Label size="big" basic color='blue'>Discount</Label><Label size="big" basic color='blue'>{this.state.discountType}</Label><Label size="big" basic color='blue'>{this.state.discountPercentage+"%"}</Label>
+              <p></p>
+              <p></p>
+              <Label size="big" basic color='red'>Total</Label><Label size="big" basic color='red'>{this.state.total}</Label>
             </Modal.Description>
-            
+
           </Modal.Content>
           <Modal.Actions>
             <Button color='black' onClick={this.turnOff}>

@@ -16,7 +16,7 @@ export class Schedule extends React.Component {
             params:{
                 model_id: model_id
             }
-        }).then(res=>{
+        },constants.HEADER).then(res=>{
             console.log(res.data)
         })
     }
@@ -25,7 +25,7 @@ export class Schedule extends React.Component {
             params:{
                 schedule_id: schedule_id
             }
-        }).then(res=>{
+        },constants.HEADER).then(res=>{
             console.log(res.data)
         })
     }
@@ -34,7 +34,7 @@ export class Schedule extends React.Component {
             params:{
                 schedule_id: schedule_id
             }
-        }).then(res=>{
+        },constants.HEADER).then(res=>{
             console.log(res.data)
         })
     } 
