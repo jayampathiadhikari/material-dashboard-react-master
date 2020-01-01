@@ -3,7 +3,7 @@ import React from "react";
 // @material-ui/core components
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { Dropdown, Label, Button, Icon, Modal, Header, Image } from "semantic-ui-react";
+import { Dropdown, Label, Button, Icon, Modal, Header, Input } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 // import DatePicker from "react-datepicker";   ----- uninstall date-picker
 import "react-datepicker/dist/react-datepicker.css";
@@ -37,13 +37,19 @@ class flight extends React.Component {
     class: 'classE',
     fetchSchedule: false,
     visible: false,
-    freeSeats: { classE: [], classB: [], classS: [] },
+    freeSeats: { classE: [], classB: [] },
     selectedArray: [],
-    selectedSeatIds: [],
+    selectedSeatIds: 0,
     seatCost: 0,
     discountPercentage: 0,
-    discountType : '',
-    total : 0,
+    discountType: '',
+    total: 0,
+    schedule_id: 0,
+    birthday:'',
+    first_name:'',
+    last_name:'',
+    passport_id:''
+    
   };
 
   handleChange = (event) => {
@@ -64,41 +70,34 @@ class flight extends React.Component {
 
         const classE = []; //economy
         const classB = []; //bussiness
-        const classS = []; //standard
+
         res.data.data.map(item => {
-          if (item.seat_class == "E") {
+          console.log("seat", item);
+          if (item.class == "E") {
             classE.push(
               {
                 key: item.seat_id,
                 value: item.seat_id,
                 text: item.seat_name,
-                seat_price: item.seat_price,
+                seat_price: item.price,
               }
             )
           }
-          else if (item.seat_class == "B") {
+          else if (item.class == "B") {
             classB.push(
               {
                 key: item.seat_id,
                 value: item.seat_id,
                 text: item.seat_name,
-                seat_price: item.seat_price
-              }
-            )
-          } else {
-            classS.push(
-              {
-                key: item.seat_id,
-                value: item.seat_id,
-                text: item.seat_name,
-                seat_price: item.seat_price
+                seat_price: item.price
               }
             )
           }
         });
 
         this.setState({
-          freeSeats: { classE, classB, classS },
+          schedule_id: schedule_id,
+          freeSeats: { classE, classB },
           visible: true,
         });
         console.log(this.state.freeSeats);
@@ -109,6 +108,7 @@ class flight extends React.Component {
     this.setState({
       visible: false
     })
+    this.bookSeats();
   }
   setClass = (event, data) => {
     this.setState({
@@ -145,12 +145,13 @@ class flight extends React.Component {
       }
     );
 
-    axios.get(constants.USER_DISCOUNT ,constants.HEADER).then(res => {
+    axios.get(constants.USER_DISCOUNT, constants.HEADER).then(res => {
       console.log("user discount", res.data.data[0].percentage)
-      this.setState({discountPercentage:res.data.data[0].percentage,
-        discountType:res.data.data[0].type
+      this.setState({
+        discountPercentage: res.data.data[0].percentage,
+        discountType: res.data.data[0].type
       })
-    }).catch(err=>{
+    }).catch(err => {
       console.log(err)
     })
 
@@ -199,39 +200,66 @@ class flight extends React.Component {
     });
 
   };
-  selectSeats = (event, data) => {
+  selectSeats = (value) => {
     this.setState({
-      selectedSeatIds: data.value
+      selectedSeatIds: value
     });
-    // this.calculate();
-    this.calculateCost();
+    var cost = 0;
+    this.state.selectedArray.forEach(
+      item => {
+        if (item.key == value) {
+          item.seat_price = item.seat_price || 0;
+          var total = item.seat_price * (100 - this.state.discountPercentage) / 100;
+          this.setState({
+            seatCost: item.seat_price,
+            total: total
+          })
+          // cost+= item.seat_price 
+        };
+      }
+    )
+
   };
 
-  calculateCost = () => {
-    var cost =0 ;
-    this.state.selectedSeatIds.forEach(
-      id=>{
-        this.state.selectedArray.forEach(
-          item=>{
-            if(item.key == id){
-              item.seat_price = item.seat_price || 0 ;
-              cost+= item.seat_price
-            }
-          }
-        )
-      }
-    );
-    console.log("seatcost" , cost)
-  }
-  calculateTotal = () =>{
-      var total = this.state.seatCost * (100-this.state.discountPercentage);
-      this.setState({
-        total:total
-      })
-  }
-  calculate = () =>{
-    this.calculateCost();
-    this.calculateTotal();
+  // calculateCost = () => {
+  //   console.log( this.state.selectedSeatIds);
+  //   var cost =0 ;
+  //   this.state.selectedArray.forEach(
+  //     item=>{
+  //       if(item.key == this.state.selectedSeatIds){
+  //         item.seat_price = item.seat_price || 0 ;
+  //         cost+= item.seat_price
+  //       }
+  //     }
+  //   )
+  //   this.setState({
+  //     seatCost:cost,
+  //   })
+
+  // }
+  // calculateTotal = () =>{
+  //     var total = this.state.seatCost * (100-this.state.discountPercentage);
+  //     this.setState({
+  //       total:total
+  //     })
+  // }
+  // calculate = () =>{
+  //   this.calculateCost();
+  //   this.calculateTotal();
+  // }
+
+  bookSeats = () => {
+    console.log("bookseats", this.state.selectedSeatIds)
+    axios.post(constants.BOOK_SEAT + this.state.schedule_id, {
+      "seat_id": this.state.selectedSeatIds,
+      "user_id": sessionStorage.getItem('userID'),
+      "first_name":this.state.first_name,
+      "last_name":this.state.last_name,
+      "birthday": this.state.birthday,
+      "passport_id":this.state.passport_id
+    }, constants.HEADER).then(res => {
+      console.log("seat book", res)
+    })
   }
   render() {
     const { classes } = this.props;
@@ -367,11 +395,24 @@ class flight extends React.Component {
         <Modal dimmer={'blurring'} open={this.state.visible} onClose={this.turnOff} size="small" >
           <Modal.Header>Reserve Seats</Modal.Header>
           <Modal.Content scrolling>
+
             <Modal.Description>
+              <Header>First Name :</Header>
+              <Input onChange={(event,data)=>{ this.setState({first_name:data.value})}}/>
+              <Header>Last Name :</Header>
+              <Input onChange={(event,data)=>{ this.setState({last_name:data.value})}}/>
+              <Header>Birthday :</Header>
+              <DayPickerInput onDayChange={day => {
+                this.setState({
+                  birthday: this.formatDate(day)
+                })
+              }} />
+              <Header>Passport ID : </Header>
+              <Input onChange={(event,data)=>{ this.setState({passport_id:data.value})}}/>
               <Header>Select Class : </Header>
               <Dropdown placeholder='Select one' selection options={seat_classes} onChange={this.selectClassArray} />
               <Header>Select Seats : </Header>
-              <Dropdown placeholder='Select one' fluid multiple selection options={this.state.selectedArray} onChange={this.selectSeats} />
+              <Dropdown placeholder='Select one' fluid selection options={this.state.selectedArray} onChange={(event, data) => this.selectSeats(data.value)} />
               <p></p>
               <p></p>
               <p></p>
@@ -380,7 +421,7 @@ class flight extends React.Component {
               <Label size="big" basic color='orange' >Cost</Label><Label size="big" basic color='orange'>{this.state.seatCost}</Label>
               <p></p>
               <p></p>
-              <Label size="big" basic color='blue'>Discount</Label><Label size="big" basic color='blue'>{this.state.discountType}</Label><Label size="big" basic color='blue'>{this.state.discountPercentage+"%"}</Label>
+              <Label size="big" basic color='blue'>Discount</Label><Label size="big" basic color='blue'>{this.state.discountType}</Label><Label size="big" basic color='blue'>{this.state.discountPercentage + "%"}</Label>
               <p></p>
               <p></p>
               <Label size="big" basic color='red'>Total</Label><Label size="big" basic color='red'>{this.state.total}</Label>
