@@ -4,19 +4,31 @@ import { Image, Item, Statistic, Card, Button, Table, Checkbox, Icon } from 'sem
 
 
 //props - 
-//       "schedule_id": 0,
-
+//       "origin": 0,
+//         destination
 //       "date": "string",
+//        name {gatename}
+//       "model_name": "string",
+//       "payment": "string",
 
-//       "airplane_model": "string",
-//       "dep_time": "string",
-//       "arrival_time": "string",
-//       "gate_name": "string"
-export class Schedule extends React.Component {
+export class Book extends React.Component {
     constructor(props) {
         super(props);
     }
-
+    formatDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+    
+        if (month.length < 2)
+          month = '0' + month;
+        if (day.length < 2)
+          day = '0' + day;
+    
+        return [year, month, day].join('-');
+      };
+      
     render() {
         return (
             <Table inverted singleLine>
@@ -26,38 +38,27 @@ export class Schedule extends React.Component {
                         <Table.HeaderCell>Departure Time</Table.HeaderCell>
                         <Table.HeaderCell>Arrival Time</Table.HeaderCell>
                         <Table.HeaderCell>Airplane Model</Table.HeaderCell>
+                        <Table.HeaderCell>Origin</Table.HeaderCell>
+                        <Table.HeaderCell>Destination</Table.HeaderCell>
                         <Table.HeaderCell>Gate Name</Table.HeaderCell>
-                        <Table.HeaderCell>Delayed</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
                 <Table.Body>
                     <Table.Row>
-                        <Table.Cell>{this.props.date}</Table.Cell>
+                        <Table.Cell>{this.formatDate(this.props.date)}</Table.Cell>
                         <Table.Cell>{this.props.dep_time}</Table.Cell>
                         <Table.Cell>{this.props.arrival_time}</Table.Cell>
                         <Table.Cell>{this.props.airplane_model}</Table.Cell>
+                        <Table.Cell>{this.props.origin}</Table.Cell>
+                        <Table.Cell>{this.props.destination}</Table.Cell>
                         <Table.Cell>{this.props.gate_name}</Table.Cell>
-                        <Table.Cell>{this.props.delayed}</Table.Cell>
                     </Table.Row>
                 </Table.Body>
 
                 <Table.Footer fullWidth>
                     <Table.Row>
-                        <Table.HeaderCell colSpan='5'/>
-                        <Table.HeaderCell >
-                            <Button
-                                floated='right'
-                                // icon
-                                // labelPosition='center'
-                                primary
-                                size='small'
-                                value={this.props.value}
-                            >
-                                 Reserve
-                            </Button>
-                            
-                        </Table.HeaderCell>
+                        <Table.HeaderCell colSpan='7'/>
                     </Table.Row>
                 </Table.Footer>
             </Table>

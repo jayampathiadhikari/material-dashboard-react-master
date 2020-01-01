@@ -197,6 +197,12 @@ class flight extends React.Component {
       this.setState({
         schedule: schedules,
       });
+    }).catch(err=>{
+      console.log(err)
+      const schedules = [];
+      this.setState({
+        schedule: schedules,
+      });
     });
 
   };
@@ -220,33 +226,6 @@ class flight extends React.Component {
     )
 
   };
-
-  // calculateCost = () => {
-  //   console.log( this.state.selectedSeatIds);
-  //   var cost =0 ;
-  //   this.state.selectedArray.forEach(
-  //     item=>{
-  //       if(item.key == this.state.selectedSeatIds){
-  //         item.seat_price = item.seat_price || 0 ;
-  //         cost+= item.seat_price
-  //       }
-  //     }
-  //   )
-  //   this.setState({
-  //     seatCost:cost,
-  //   })
-
-  // }
-  // calculateTotal = () =>{
-  //     var total = this.state.seatCost * (100-this.state.discountPercentage);
-  //     this.setState({
-  //       total:total
-  //     })
-  // }
-  // calculate = () =>{
-  //   this.calculateCost();
-  //   this.calculateTotal();
-  // }
 
   bookSeats = () => {
     console.log("bookseats", this.state.selectedSeatIds)
