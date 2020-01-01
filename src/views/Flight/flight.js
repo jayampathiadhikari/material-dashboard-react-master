@@ -353,20 +353,20 @@ class flight extends React.Component {
               this.state.schedule.map((item) => {
                 return (
                   <ul key={item.schedule_id} onClick={this.handle} style={{ paddingLeft: 0 }}>
-                    <Schedule date={item.date} value={[item.schedule_id]} airplane_model={item.airplane_model} dep_time={item.dep_time} arrival_time={item.arrival_time} gate_name={item.gate_name} delayed={"hardcode"} />
+                    <Schedule date={item.date} value={[item.schedule_id]} airplane_model={item.airplane_model} dep_time={item.dep_time} arrival_time={item.arrival_time} gate_name={item.gate_name} delayed={"No"} />
                   </ul>
                 )
               })
             }
 
           </Grid>
-          <Grid item xs={5} style={{ backgroundColor: "black" }}>
+          <Grid item xs={5} >
 
           </Grid>
 
         </Grid>
         <Grid container spacing={3} style={{ alignItems: "center" }}>
-          <Grid item xs={8} style={{ backgroundColor: "blue" }}>
+          <Grid item xs={8} >
             {/* <Seats/> */}
           </Grid>
 
