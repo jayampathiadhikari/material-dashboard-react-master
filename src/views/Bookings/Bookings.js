@@ -11,10 +11,23 @@ export default class Mybookings extends React.Component {
     bookings: []
   };
   componentDidMount() {
-    axios.get(constants.ALL_BOOKING_USER, constants.HEADER).then(res => {
-      this.setState({ bookings: res.data.data });
-      console.log("booking", res);
-    });
+    if (sessionStorage.getItem("userToken") == null) {
+      this.props.history.push({
+        pathname: "/access"
+      });
+    } else {
+      axios
+        .get(
+          constants.ALL_BOOKING_USER +
+            `${sessionStorage.getItem("userID")}` +
+            "/booking",
+          constants.HEADER
+        )
+        .then(res => {
+          this.setState({ bookings: res.data.data });
+          console.log("booking", res);
+        });
+    }
   }
 
   render() {

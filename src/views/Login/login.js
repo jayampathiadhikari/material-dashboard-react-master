@@ -11,6 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import axios from "axios";
 import * as constants from "../Flight/constants.js";
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,8 @@ class Login extends React.Component {
       email: "",
       password: "",
       username: "",
-      userRef: null
+      userRef: null,
+      open: false
     };
   }
   handleSubmit = event => {
@@ -43,6 +45,7 @@ class Login extends React.Component {
         console.log(res.headers["x-access-token"]);
       })
       .catch(err => {
+        alert("check email and password");
         console.log("AXIOS ERROR: ", err);
       });
   };
@@ -157,6 +160,9 @@ const styles = theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  close: {
+    padding: theme.spacing(0.5)
   }
 });
 

@@ -42,14 +42,14 @@ class flight extends React.Component {
     selectedSeatIds: 0,
     seatCost: 0,
     discountPercentage: 0,
-    discountType: '',
+    discountType: 'No Discount',
     total: 0,
     schedule_id: 0,
     birthday:'',
     first_name:'',
     last_name:'',
-    passport_id:''
-    
+    passport_id:'',
+    noSchedules:false,
   };
 
   handleChange = (event) => {
@@ -125,35 +125,42 @@ class flight extends React.Component {
     }
   }
   componentDidMount() {
-    axios.get(constants.FLIGHT_COMP_ON_UPDATE, constants.HEADER).then(
-      res => {
-        console.log(res.data.data);
-        const options = [];
-        res.data.data.map(
-          item => {
-            options.push({
-              key: item.airport_id,
-              value: item.code,
-              text: item.name
-            })
-          }
-        );
-        console.log(options);
+    if (sessionStorage.getItem("userToken") == null) {
+      this.props.history.push({
+        pathname: "/access"
+      });
+    } else{
+      axios.get(constants.FLIGHT_COMP_ON_UPDATE, constants.HEADER).then(
+        res => {
+          console.log(res.data.data);
+          const options = [];
+          res.data.data.map(
+            item => {
+              options.push({
+                key: item.airport_id,
+                value: item.code,
+                text: item.name
+              })
+            }
+          );
+          console.log(options);
+          this.setState({
+            options
+          })
+        }
+      );
+  
+      axios.get(constants.USER_DISCOUNT + `${sessionStorage.getItem("userID")}`, constants.HEADER).then(res => {
+        console.log("user discount", res.data.data[0].percentage)
         this.setState({
-          options
+          discountPercentage: res.data.data[0].percentage,
+          discountType: res.data.data[0].type
         })
-      }
-    );
-
-    axios.get(constants.USER_DISCOUNT, constants.HEADER).then(res => {
-      console.log("user discount", res.data.data[0].percentage)
-      this.setState({
-        discountPercentage: res.data.data[0].percentage,
-        discountType: res.data.data[0].type
+      }).catch(err => {
+        console.log("discount error")
       })
-    }).catch(err => {
-      console.log(err)
-    })
+    }
+    
 
   };
   formatDate(date) {
@@ -196,13 +203,16 @@ class flight extends React.Component {
       console.log(schedules);
       this.setState({
         schedule: schedules,
+        noSchedules:false
       });
     }).catch(err=>{
       console.log(err)
       const schedules = [];
       this.setState({
         schedule: schedules,
+        noSchedules:true
       });
+      
     });
 
   };
@@ -357,6 +367,16 @@ class flight extends React.Component {
                   </ul>
                 )
               })
+             
+            }{
+              (this.state.schedule.length == 0 && this.state.noSchedules ) ?
+               (<h2>
+                  No Results 
+                </h2>) : (
+                  <div></div>
+                ) 
+              
+
             }
 
           </Grid>
